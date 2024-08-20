@@ -7,7 +7,7 @@
 </head>
 <body>
     <?php
-    echo 'Hello PHP!!'
+    echo '編集テスト'
     ?>
 </body>
 </html>
