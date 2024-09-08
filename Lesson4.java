@@ -8,6 +8,8 @@ import java.util.List;
 
 public class Lesson4 {
     public static void main(String[] args) throws Exception {
+        int columnMaxWidth = 0;
+        String tabWidth = " ";
         // ファイルパス（文字コード変更後も同じ）
         String filePath = "C:\\Users\\masha\\Desktop\\コード保存ファイル\\成績一覧表.csv";
         
@@ -16,19 +18,14 @@ public class Lesson4 {
         
         // 最初にファイルを読み込んで、最大カラム幅を計算
         try (FileInputStream fis = new FileInputStream(filePath);
-             BufferedReader br = new BufferedReader(new InputStreamReader(fis, "Shift-JIS"))) {
+            BufferedReader br = new BufferedReader(new InputStreamReader(fis, "Shift-JIS"))) {
             
             String line;
-            while ((line = br.readLine()) != null) {
+            while((line = br.readLine()) != null){
                 String[] wordList = line.split(",", -1);
-                
-                // 各カラムの幅を計算
-                for (int i = 0; i < wordList.length; i++) {
-                    int currentWidth = getDisplayWidth(wordList[i]);
-                    if (columnWidths.size() <= i) {
-                        columnWidths.add(currentWidth);
-                    } else {
-                        columnWidths.set(i, Math.max(columnWidths.get(i), currentWidth));
+                for(int i = 0;i < wordList.length; i++){
+                    if(columnMaxWidth < getDisplayWidth(wordList[i])){
+                        columnMaxWidth = getDisplayWidth(wordList[i]);
                     }
                 }
             }
@@ -47,7 +44,14 @@ public class Lesson4 {
                 // カラムごとに幅に合わせて整形して出力
                 for (int i = 0; i < wordList.length; i++) {
                     // 各カラムにカラム幅に基づいた整形を適用
-                    System.out.print(String.format("%-" + columnWidths.get(i) + "s", wordList[i]));
+                    if(wordList[i].isEmpty()){
+                        wordList[i] = "未設定";
+                    }
+                    for(int j = 0; j <  (columnMaxWidth - getDisplayWidth(wordList[i])); j++){
+                        tabWidth += " ";
+                    }
+                    System.out.print(wordList[i] + tabWidth);
+                    tabWidth = " ";
                 }
                 System.out.println();
             }
